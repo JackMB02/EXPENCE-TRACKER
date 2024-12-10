@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Expense Tracker</title>
+    <style>
+        /* styles.css */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #2b5b8a;
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 50px auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: #4CAF50;
+}
+
+.form {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.form input, .form button {
+    padding: 10px;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    flex: 1 1 calc(25% - 10px);
+    margin-right: 10px;
+}
+
+.form button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.form button:hover {
+    background-color: #45a049;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+table th, table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+table tr:hover {
+    background-color: #e0f7fa;
+}
+
+.deleteBtn {
+    background-color: #f44336;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.deleteBtn:hover {
+    background-color: #e53935;
+}
+
+.total {
+    text-align: right;
+    font-size: 1.2rem;
+    color: #4CAF50;
+}
+
+    </style>
+</head>
+<body>
+    <center><h1 style="">INESAM</h1></center>
+    <div class="container">
+        <h1>Business Expense Tracker</h1>
+        <div class="form">
+            <input type="text" id="expenseName" placeholder="Expense Name" required>
+            <input type="number" id="expenseAmount" placeholder="Amount (RWF)" required>
+            <input type="date" id="expenseDate" required>
+            <input type="time" id="expenseTime" required>
+            <button id="addExpense">Add Expense</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Amount (RWF)</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="expenseList">
+                <!-- Expenses will be added here -->
+            </tbody>
+        </table>
+        <div class="total">
+            <strong>Total Expenses: RWF <span id="totalExpense">0</span></strong>
+        </div>
+    </div>
+    <script>
+        // script.js
+document.addEventListener("DOMContentLoaded", () => {
+    const expenseName = document.getElementById("expenseName");
+    const expenseAmount = document.getElementById("expenseAmount");
+    const expenseDate = document.getElementById("expenseDate");
+    const expenseTime = document.getElementById("expenseTime");
+    const addExpense = document.getElementById("addExpense");
+    const expenseList = document.getElementById("expenseList");
+    const totalExpense = document.getElementById("totalExpense");
+
+    let total = 0;
+
+    // Function to add an expense
+    const addExpenseItem = () => {
+        const name = expenseName.value;
+        const amount = parseFloat(expenseAmount.value);
+        const date = expenseDate.value;
+        const time = expenseTime.value;
+
+        if (!name || !amount || !date || !time) {
+            alert("Please fill in all fields!");
+            return;
+        }
+
+        // Add expense to table
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${name}</td>
+            <td>${amount.toFixed(2)}</td>
+            <td>${date}</td>
+            <td>${time}</td>
+            <td><button class="deleteBtn">Delete</button></td>
+        `;
+        expenseList.appendChild(row);
+
+        // Update total
+        total += amount;
+        totalExpense.textContent = total.toFixed(2);
+
+        // Clear input fields
+        expenseName.value = "";
+        expenseAmount.value = "";
+        expenseDate.value = "";
+        expenseTime.value = "";
+    };
+
+    // Function to handle delete
+    const deleteExpenseItem = (e) => {
+        if (e.target.classList.contains("deleteBtn")) {
+            const row = e.target.parentElement.parentElement;
+            const amount = parseFloat(row.cells[1].textContent);
+            total -= amount;
+            totalExpense.textContent = total.toFixed(2);
+            row.remove();
+        }
+    };
+
+    // Event Listeners
+    addExpense.addEventListener("click", addExpenseItem);
+    expenseList.addEventListener("click", deleteExpenseItem);
+});
+
+    </script>
+</body>
+</html>
+
